@@ -16,6 +16,7 @@ public class Program01 {
 		
 		Vendedor vendedor = vendedorDao.findById(7);
 		
+		System.out.println("==-== Teste nº 1 - FindById");
 		System.out.println("Vendedor Encontrado ==> " + vendedor);
 				
 		
