@@ -8,9 +8,11 @@ public class Departamento implements Serializable {
 
 	private Integer id;
 	private String nome;
-	
 
-	
+	public Departamento() {
+
+	}
+
 	public Departamento(Integer id, String nome) {
 		this.id = id;
 		this.nome = nome;
@@ -61,10 +63,5 @@ public class Departamento implements Serializable {
 	public String toString() {
 		return "Departamento [id=" + id + ", nome=" + nome + "]";
 	}
-	
-	
-	
-	
-	
-	
+
 }
