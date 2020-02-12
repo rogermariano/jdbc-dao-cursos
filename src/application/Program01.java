@@ -1,6 +1,6 @@
 package application;
 
-import java.util.Date;
+import java.util.List;
 
 import model.dao.DaoFactory;
 import model.dao.VendedorDao;
@@ -19,6 +19,14 @@ public class Program01 {
 		System.out.println("==-== Teste nº 1 - FindById");
 		System.out.println("Vendedor Encontrado ==> " + vendedor);
 				
+		System.out.println("==-== Teste nº 2 - FindByDepartment");
+		Departamento depto = new Departamento(2, null);
+		
+		List<Vendedor> listaVendedor = vendedorDao.findByDepartment(depto);
+		
+		for(Vendedor vend : listaVendedor){
+			System.out.println(vend);
+		}
 		
 	}
 

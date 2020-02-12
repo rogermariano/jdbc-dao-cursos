@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import model.dao.VendedorDao;
 import model.entidade.Departamento;
@@ -42,33 +45,34 @@ public class VendedorDaoJDBC implements VendedorDao {
 	public Vendedor findById(Integer id) {
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		String sql = " select s.*, d.name " + " from " + " seller s "
+		String sql = " select s.*, d.name as Nome " + " from " + " seller s "
 				+ " inner join department d " + " on s.DepartmentId = d.id "
 				+ " where s.Id = ? ";
 
 		try {
 			st = cnx.prepareStatement(sql);
 			st.setInt(1, id);
-			
+
 			rs = st.executeQuery();
 
-			if( rs.next()){
+			if (rs.next()) {
 				Departamento depto = instanciarDepto(rs);
 				Vendedor vendedor = instanciarVendedor(rs, depto);
-				
+
 				return vendedor;
 			}
 			return null;
 		} catch (SQLException e) {
 			throw new DbException(e.getMessage());
-		}finally{
+		} finally {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
 
 	}
 
-	private Vendedor instanciarVendedor(ResultSet rs, Departamento depto) throws SQLException {
+	private Vendedor instanciarVendedor(ResultSet rs, Departamento depto)
+			throws SQLException {
 		Vendedor vendedor = new Vendedor();
 		vendedor.setId(rs.getInt("id"));
 		vendedor.setNome(rs.getString("Name"));
@@ -76,15 +80,15 @@ public class VendedorDaoJDBC implements VendedorDao {
 		vendedor.setDtNasc(rs.getDate("BirthDate"));
 		vendedor.setSalarioBase(rs.getDouble("BaseSalary"));
 		vendedor.setDepto(depto);
-		
+
 		return vendedor;
 	}
 
 	private Departamento instanciarDepto(ResultSet rs) throws SQLException {
 		Departamento depto = new Departamento();
 		depto.setId(rs.getInt("DepartmentId"));
-		depto.setNome(rs.getString("name"));
-		
+		depto.setNome(rs.getString("Nome"));
+
 		return depto;
 	}
 
@@ -92,6 +96,48 @@ public class VendedorDaoJDBC implements VendedorDao {
 	public List<Vendedor> findAll() {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<Vendedor> findByDepartment(Departamento departamento) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		String sql = "select s.*, d.name as Nome " + " from " + " seller s "
+				+ " inner join department d " + " on s.DepartmentId = d.id "
+				+ " where d.id = ? " + " order by s.name ";
+
+		try {
+			st = cnx.prepareStatement(sql);
+			st.setInt(1, departamento.getId());
+
+			rs = st.executeQuery();
+
+			List<Vendedor> listaVendedor = new ArrayList<>();
+
+			Map<Integer, Departamento> mapDepto = new HashMap<>();
+
+			while (rs.next()) {
+
+				Departamento depto = mapDepto.get(rs.getInt("DepartmentId"));
+
+				if (depto == null) {
+					depto = instanciarDepto(rs);
+					mapDepto.put(rs.getInt("DepartmentId"), depto);
+				}
+
+				Vendedor vendedor = instanciarVendedor(rs, depto);
+
+				listaVendedor.add(vendedor);
+
+			}
+			return listaVendedor;
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+			DB.closeResultSet(rs);
+		}
+
 	}
 
 }
