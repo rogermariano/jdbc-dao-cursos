@@ -28,6 +28,14 @@ public class Program01 {
 			System.out.println(vend);
 		}
 		
+		
+		System.out.println("==-== Teste nº 3 - FindAll");
+		
+		listaVendedor = vendedorDao.findAll();
+		
+		for(Vendedor vend : listaVendedor){
+			System.out.println(vend);
+		}
 	}
 
 }
