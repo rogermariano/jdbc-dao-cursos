@@ -19,6 +19,8 @@ import db.DbException;
 public class VendedorDaoJDBC implements VendedorDao {
 
 	public Connection cnx = null;
+	
+	
 
 	public VendedorDaoJDBC(Connection cnx) {
 		this.cnx = cnx;
@@ -68,7 +70,6 @@ public class VendedorDaoJDBC implements VendedorDao {
 		String sql = "update seller set Name = ?, Email = ? , BirthDate = ? , BaseSalary = ?, DepartmentId = ? "
 				+ " where id = ? ";
 
-		
 		try {
 			st = cnx.prepareStatement(sql);
 
@@ -89,13 +90,30 @@ public class VendedorDaoJDBC implements VendedorDao {
 			DB.closeStatement(st);
 
 		}
-		
-		
+
 	}
 
 	@Override
 	public void deleteById(Integer id) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+
+		String sql = " delete from seller where id = ? ";
+
+		try {
+			st = cnx.prepareStatement(sql);
+			st.setInt(1, id);
+			
+			int exclusao = st.executeUpdate();
+			
+			if(exclusao == 0){
+				throw new DbException("Id do vendedor nº " + id + " não encontrado !!!");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+		}
 
 	}
 

@@ -2,10 +2,10 @@ package application;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import model.dao.DaoFactory;
 import model.dao.VendedorDao;
-import model.dao.impl.VendedorDaoJDBC;
 import model.entidade.Departamento;
 import model.entidade.Vendedor;
 
@@ -17,6 +17,8 @@ public class Program01 {
 		VendedorDao vendedorDao = new DaoFactory().createVendedorDao();
 		
 		Vendedor vendedor = vendedorDao.findById(7);
+
+		Scanner sc  = new Scanner(System.in);
 		
 		System.out.println("==-== Teste nº 1 - FindById");
 		System.out.println("Vendedor Encontrado ==> " + vendedor);
@@ -47,13 +49,19 @@ public class Program01 {
 		System.out.println("Inserido com sucesso!!! " +  vendor.getId());
 
 		System.out.println("==-== Teste nº 5 - UpDate");
-		vendedor = vendedorDao.findById(11);
+		vendedor = vendedorDao.findById(12);
 		vendedor.setEmail("SilviaHDiasSouza@gmail.com");
 		
 		vendedorDao.update(vendedor);
 		
 		System.out.println("Alterado com sucesso!!! ");
-	}			
+		
+		System.out.println("==-== Teste nº 6 - Delete");
+		Integer codigo = sc.nextInt();
+		
+		vendedorDao.deleteById(codigo);
+		System.out.println("Excluído com Sucesso !!!!");
+		}			
 	
 	}			
 	
