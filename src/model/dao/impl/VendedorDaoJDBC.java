@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,7 +27,39 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 	@Override
 	public void insert(Vendedor obj) {
-		// TODO Auto-generated method stub
+
+		PreparedStatement st = null;
+		String sql = "insert into seller (Name, Email, BirthDate, BaseSalary, DepartmentId) values "
+				+ " (?, ?, ?, ?, ?)";
+		try {
+			st = cnx.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
+			st.setString(1, obj.getNome());
+			st.setString(2, obj.getEmail());
+			st.setDate(3, new java.sql.Date(obj.getDtNasc().getTime()));
+			st.setDouble(4, obj.getSalarioBase());
+			st.setInt(5, obj.getDepto().getId());
+
+			int inc = st.executeUpdate();
+
+			if (inc > 0) {
+				ResultSet rs = st.getGeneratedKeys();
+				if (rs.next()) {
+					System.out.println(rs.getInt(1) + "incluído !!!");
+					obj.setId(rs.getInt(1));
+				}
+				DB.closeResultSet(rs);
+			} else {
+				throw new DbException(
+						"Erro inesperado !!! :::: Registro não incluído :::::");
+			}
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+
+		}
 
 	}
 
@@ -93,7 +127,9 @@ public class VendedorDaoJDBC implements VendedorDao {
 	}
 
 	@Override
+	/******************************************************************/
 	public List<Vendedor> findAll() {
+		/******************************************************************/
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String sql = "select s.*, d.name as Nome " + " from " + " seller s "
@@ -130,12 +166,13 @@ public class VendedorDaoJDBC implements VendedorDao {
 			DB.closeStatement(st);
 			DB.closeResultSet(rs);
 		}
-		
-		
+
 	}
 
 	@Override
+	/******************************************************************/
 	public List<Vendedor> findByDepartment(Departamento departamento) {
+		/******************************************************************/
 		PreparedStatement st = null;
 		ResultSet rs = null;
 		String sql = "select s.*, d.name as Nome " + " from " + " seller s "

@@ -1,9 +1,11 @@
 package application;
 
+import java.util.Date;
 import java.util.List;
 
 import model.dao.DaoFactory;
 import model.dao.VendedorDao;
+import model.dao.impl.VendedorDaoJDBC;
 import model.entidade.Departamento;
 import model.entidade.Vendedor;
 
@@ -36,6 +38,13 @@ public class Program01 {
 		for(Vendedor vend : listaVendedor){
 			System.out.println(vend);
 		}
-	}
-
+		
+		System.out.println("==-== Teste nº 4 - Insert");
+		Vendedor vendor = new Vendedor(null, "Silvia Helena", "shdDias@yahoo.com.br", new Date(), 12000.0, depto);
+		
+		vendedorDao.insert(vendor);
+		
+		System.out.println("Inserido com sucesso!!! " +  vendor.getId());
+	}			
+	
 }
