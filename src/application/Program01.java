@@ -45,6 +45,17 @@ public class Program01 {
 		vendedorDao.insert(vendor);
 		
 		System.out.println("Inserido com sucesso!!! " +  vendor.getId());
+
+		System.out.println("==-== Teste nº 5 - UpDate");
+		vendedor = vendedorDao.findById(11);
+		vendedor.setEmail("SilviaHDiasSouza@gmail.com");
+		
+		vendedorDao.update(vendedor);
+		
+		System.out.println("Alterado com sucesso!!! ");
 	}			
 	
-}
+	}			
+	
+	
+

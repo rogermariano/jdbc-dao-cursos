@@ -5,7 +5,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,8 +64,33 @@ public class VendedorDaoJDBC implements VendedorDao {
 
 	@Override
 	public void update(Vendedor obj) {
-		// TODO Auto-generated method stub
+		PreparedStatement st = null;
+		String sql = "update seller set Name = ?, Email = ? , BirthDate = ? , BaseSalary = ?, DepartmentId = ? "
+				+ " where id = ? ";
 
+		
+		try {
+			st = cnx.prepareStatement(sql);
+
+			st.setString(1, obj.getNome());
+			st.setString(2, obj.getEmail());
+			st.setDate(3, new java.sql.Date(obj.getDtNasc().getTime()));
+			st.setDouble(4, obj.getSalarioBase());
+			st.setInt(5, obj.getDepto().getId());
+			st.setInt(6, obj.getId());
+
+			st.executeUpdate();
+
+			System.out.println("Registro Autalizado com sucesso !!! ");
+
+		} catch (SQLException e) {
+			throw new DbException(e.getMessage());
+		} finally {
+			DB.closeStatement(st);
+
+		}
+		
+		
 	}
 
 	@Override
